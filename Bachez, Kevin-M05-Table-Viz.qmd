@@ -203,4 +203,4 @@ For the Wellness Ranch CEP, these tools can eventually be used to create present
 ## Prompt: Provide clickable links to both the GitHub repository and published GitHub Pages HTML report.
 
 - [GitHub Repository](<https://github.com/kebachez/Bachez-Kevin-M05-Table-Viz.git>)
-- [Published GitHub Pages Report](PASTE-YOUR-GITHUB-PAGES-LINK-HERE)
+- [Published GitHub Pages Report](<https://kebachez.github.io/Bachez-Kevin-M05-Table-Viz/>)
