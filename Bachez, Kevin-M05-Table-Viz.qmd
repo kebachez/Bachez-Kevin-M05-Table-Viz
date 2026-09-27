@@ -1,0 +1,206 @@
+---
+title: "M05-Visualizing Data with Tables for MSDM CEP"
+author: "Kevin Bachez"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-expand: true
+    number-sections: true
+    code-link: true
+    code-fold: true
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+    theme: cosmo
+editor: visual
+execute:
+  freeze: auto
+---
+```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse)
+library(gt)
+library(gtExtras)
+```
+
+# Module Reflection
+
+## Prompt 1: Summarize what you learned from the videos you watched.
+
+The videos showed me how tables can be used as an effective form of data visualization rather than simply displaying raw numbers. I learned how the `gt` package can transform a basic data frame into a polished and presentation-ready table. The videos demonstrated how to add titles and subtitles, customize column labels, format numbers and currency, create stub columns, control column widths, add source notes and footnotes, change fonts, adjust alignment, add borders, and apply color based on values.
+
+I also learned that a well-designed table has multiple elements that can be customized independently. Instead of treating a table as a simple output, `gt` allows the table to be designed intentionally for a specific audience. The `gtExtras` package extends this idea by adding small visualizations such as inline bars and sparklines directly inside the table.
+
+> One of my main takeaways from this module is that a table can combine exact numerical information with visual cues, making it both analytical and easy to interpret.
+
+## Prompt 2: What did you like about the `gt` and `gtExtras` packages demonstrated in the videos?
+
+What I liked most about `gt` is the amount of control it provides over the appearance and organization of a table. It is possible to start with a simple data frame and progressively improve it by adding a title, subtitle, clearer column names, formatting, colors, footnotes, source notes, and other visual elements.
+
+I especially liked that `gt` works naturally with `dplyr`. This makes it possible to prepare and summarize data first and then immediately turn the results into a professional table within the same workflow.
+
+I also liked `gtExtras` because it adds small visual elements directly inside the table. For example, inline bar charts or sparklines can help communicate patterns without requiring a separate figure. This is useful for dashboards, reports, and presentation slides where both exact numbers and quick visual comparisons are valuable.
+
+## Prompt 3: How do tables complement charts for data visualization?
+
+Tables and charts serve different but complementary purposes. Charts are useful for quickly identifying patterns, relationships, trends, and differences. Tables are better when the reader needs exact values.
+
+For example, a chart may quickly show which category has the highest sales, but a table can provide the exact revenue amount, number of orders, average transaction value, and percentage contribution. A report can therefore use charts for overall patterns and tables for precise supporting details.
+
+Using tables and charts together can make analysis more complete because the chart provides a visual summary while the table provides exact evidence.
+
+## Prompt 4: Under what circumstances would you prefer to use tables rather than charts?
+
+I would prefer tables when exact values are important, when several metrics must be shown together, or when the audience may need to compare specific numbers across categories.
+
+Tables are especially useful when:
+
+- The audience needs exact values.
+- Several measures need to be displayed at once.
+- The dataset has a relatively small number of categories.
+- Percentages, currency values, counts, and averages need to appear together.
+- The output will be used as a reference later.
+- Small charts can be placed inside the table to support the numerical information.
+
+For my MSDM CEP, a table would be useful for presenting performance indicators such as users, sessions, conversions, conversion rates, and engagement metrics.
+
+::: {.callout-tip}
+## Connection to My MSDM CEP
+
+Although I am using the `pizzaplace` dataset for this assignment, the same type of table can later be adapted to the Wellness Ranch Equine Assisted Therapy project. Instead of pizza categories, I could compare traffic sources, landing pages, or service categories using metrics such as sessions, inquiries, conversions, and conversion rates.
+:::
+
+# Descriptive Statistics Table
+
+## Prompt: Use data relevant to your Analytics Objectives and create a table using `gt` and `gtExtras`.
+
+Because the Wellness Ranch project is still in the process of establishing baseline analytics data, I am using the built-in `pizzaplace` dataset from the `gt` package as a practice dataset. The table below demonstrates how I could later summarize key performance indicators for the MSDM CEP.
+
+```{r}
+#| label: tbl-data-prep
+#| message: false
+#| warning: false
+#| output: false
+
+pizza_summary <- pizzaplace |>
+  group_by(type) |>
+  summarise(
+    Orders = n(),
+    Revenue = sum(price),
+    `Average Price` = mean(price),
+    `Minimum Price` = min(price),
+    `Maximum Price` = max(price)
+  ) |>
+  mutate(
+    `Revenue Share` = Revenue / sum(Revenue),
+    Revenue_Bar = Revenue
+  ) |>
+  arrange(desc(Revenue))
+```
+
+```{r}
+#| label: tbl-pizza-summary
+#| echo: false
+#| tbl-cap: "Descriptive Statistics by Pizza Type"
+
+pizza_summary |>
+  gt(rowname_col = "type") |>
+  tab_header(
+    title = md("**Pizza Category Performance Summary**"),
+    subtitle = "Example table for adapting descriptive analytics to the MSDM CEP"
+  ) |>
+  tab_stubhead(label = "Pizza Type") |>
+  tab_spanner(
+    label = "Sales Performance",
+    columns = c(Orders, Revenue, `Average Price`)
+  ) |>
+  tab_spanner(
+    label = "Price Range",
+    columns = c(`Minimum Price`, `Maximum Price`)
+  ) |>
+  cols_label(
+    Orders = "Orders",
+    Revenue = "Total Revenue",
+    `Average Price` = "Avg. Price",
+    `Minimum Price` = "Min. Price",
+    `Maximum Price` = "Max. Price",
+    `Revenue Share` = "Revenue Share",
+    Revenue_Bar = "Revenue Visual"
+  ) |>
+  fmt_number(
+    columns = Orders,
+    decimals = 0
+  ) |>
+  fmt_currency(
+    columns = c(
+      Revenue,
+      `Average Price`,
+      `Minimum Price`,
+      `Maximum Price`
+    ),
+    currency = "USD",
+    decimals = 2
+  ) |>
+  fmt_percent(
+    columns = `Revenue Share`,
+    decimals = 2
+  ) |>
+  data_color(
+    columns = Revenue
+  ) |>
+  gt_plt_bar(
+    column = Revenue_Bar,
+    keep_column = TRUE,
+    width = 35
+  ) |>
+  tab_footnote(
+    footnote = "Revenue share represents each pizza category's percentage of total revenue.",
+    locations = cells_column_labels(columns = `Revenue Share`)
+  ) |>
+  tab_source_note(
+    source_note = "Source: gt::pizzaplace built-in dataset."
+  ) |>
+  cols_width(
+  everything() ~ px(90)
+  ) |>
+  opt_align_table_header(align = "left")
+```
+
+## Prompt: Explain why the table is worth adding to your MSDM project written report or presentation slides.
+
+This table is worth including because it combines several types of descriptive statistics into one visual. A reader can see the exact number of orders, total revenue, average price, minimum and maximum prices, and revenue share for each category.
+
+The inline bar chart also makes the comparison easier to understand without requiring a separate visualization. This combination of exact values and small visual elements is particularly useful for a presentation because an audience can quickly identify the strongest categories while still seeing the underlying numbers.
+
+For the Wellness Ranch CEP, this format could later be adapted to compare website traffic sources, landing pages, service categories, or conversion activities. For example, rows could represent organic search, direct traffic, social media, and referral traffic, while columns could show users, sessions, inquiries, conversion rates, and visual performance indicators.
+
+As shown in @tbl-pizza-summary, the table makes it possible to compare multiple performance indicators within one compact display.
+
+# Key Takeaways
+
+::: {.panel-tabset}
+
+## gt
+
+The `gt` package provides detailed control over table structure, labels, formatting, notes, colors, and overall presentation.
+
+## gtExtras
+
+The `gtExtras` package extends `gt` by making it easy to include compact visualizations such as inline bars and sparklines.
+
+## CEP Application
+
+For the Wellness Ranch CEP, these tools can eventually be used to create presentation-ready KPI tables using GA4 and Google Search Console data.
+
+:::
+
+# Appendix
+
+## Prompt: Provide clickable links to both the GitHub repository and published GitHub Pages HTML report.
+
+- [GitHub Repository](<https://github.com/kebachez/Bachez-Kevin-M05-Table-Viz.git>)
+- [Published GitHub Pages Report](PASTE-YOUR-GITHUB-PAGES-LINK-HERE)
