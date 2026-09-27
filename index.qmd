@@ -18,6 +18,7 @@ editor: visual
 execute:
   freeze: auto
 ---
+
 ```{r}
 #| label: setup
 #| include: false
@@ -59,16 +60,16 @@ I would prefer tables when exact values are important, when several metrics must
 
 Tables are especially useful when:
 
-- The audience needs exact values.
-- Several measures need to be displayed at once.
-- The dataset has a relatively small number of categories.
-- Percentages, currency values, counts, and averages need to appear together.
-- The output will be used as a reference later.
-- Small charts can be placed inside the table to support the numerical information.
+-   The audience needs exact values.
+-   Several measures need to be displayed at once.
+-   The dataset has a relatively small number of categories.
+-   Percentages, currency values, counts, and averages need to appear together.
+-   The output will be used as a reference later.
+-   Small charts can be placed inside the table to support the numerical information.
 
 For my MSDM CEP, a table would be useful for presenting performance indicators such as users, sessions, conversions, conversion rates, and engagement metrics.
 
-::: {.callout-tip}
+::: callout-tip
 ## Connection to My MSDM CEP
 
 Although I am using the `pizzaplace` dataset for this assignment, the same type of table can later be adapted to the Wellness Ranch Equine Assisted Therapy project. Instead of pizza categories, I could compare traffic sources, landing pages, or service categories using metrics such as sessions, inquiries, conversions, and conversion rates.
@@ -182,8 +183,7 @@ As shown in @tbl-pizza-summary, the table makes it possible to compare multiple 
 
 # Key Takeaways
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ## gt
 
 The `gt` package provides detailed control over table structure, labels, formatting, notes, colors, and overall presentation.
@@ -195,12 +195,11 @@ The `gtExtras` package extends `gt` by making it easy to include compact visuali
 ## CEP Application
 
 For the Wellness Ranch CEP, these tools can eventually be used to create presentation-ready KPI tables using GA4 and Google Search Console data.
-
 :::
 
 # Appendix
 
 ## Prompt: Provide clickable links to both the GitHub repository and published GitHub Pages HTML report.
 
-- [GitHub Repository](<https://github.com/kebachez/Bachez-Kevin-M05-Table-Viz.git>)
-- [Published GitHub Pages Report](<https://kebachez.github.io/Bachez-Kevin-M05-Table-Viz/>)
+-   [GitHub Repository](https://github.com/kebachez/Bachez-Kevin-M05-Table-Viz.git)
+-   [Published GitHub Pages Report](https://kebachez.github.io/Bachez-Kevin-M05-Table-Viz/)
